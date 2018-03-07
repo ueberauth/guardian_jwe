@@ -56,7 +56,7 @@ defmodule Guardian.Token.Jwe do
   @doc """
   Generate unique token id
   """
-  def token_id(), do: UUID.uuid4()
+  def token_id, do: UUID.uuid4()
 
   @doc """
   Create a token. Uses the claims and encrypts the token.
