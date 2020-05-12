@@ -88,11 +88,9 @@ defmodule Guardian.Token.JweTest do
     test "successfully decrypts a token" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
 
-      {:ok, token} =
-        create_token(secret, "PBES2-HS256+A128KW")
+      {:ok, token} = create_token(secret, "PBES2-HS256+A128KW")
 
-      {:ok, claims} =
-        decode_token(token, secret, "PBES2-HS256+A128KW")
+      {:ok, claims} = decode_token(token, secret, "PBES2-HS256+A128KW")
 
       assert claims["id"] == 1
     end
@@ -100,13 +98,11 @@ defmodule Guardian.Token.JweTest do
     test "returns error when decryption fails" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
 
-      {:ok, token} =
-        create_token(secret, "PBES2-HS256+A128KW")
+      {:ok, token} = create_token(secret, "PBES2-HS256+A128KW")
 
       bad_secret = JOSE.JWK.from_oct("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-      {:error, :invalid_token} =
-        decode_token(token, bad_secret, "PBES2-HS256+A128KW")
+      {:error, :invalid_token} = decode_token(token, bad_secret, "PBES2-HS256+A128KW")
     end
   end
 
@@ -114,11 +110,9 @@ defmodule Guardian.Token.JweTest do
     test "success" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
 
-      {:ok, token} =
-        create_token(secret, "PBES2-HS256+A128KW")
+      {:ok, token} = create_token(secret, "PBES2-HS256+A128KW")
 
-      {:ok, claims} =
-        decode_token(token, secret, "PBES2-HS256+A128KW")
+      {:ok, claims} = decode_token(token, secret, "PBES2-HS256+A128KW")
 
       assert claims["id"] == 1
     end
@@ -126,13 +120,11 @@ defmodule Guardian.Token.JweTest do
     test "decryption failure" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
 
-      {:ok, token} =
-        create_token(secret, "PBES2-HS256+A128KW")
+      {:ok, token} = create_token(secret, "PBES2-HS256+A128KW")
 
       bad_secret = JOSE.JWK.from_oct("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-      {:error, :invalid_token} =
-        decode_token(token, bad_secret, "PBES2-HS256+A128KW")
+      {:error, :invalid_token} = decode_token(token, bad_secret, "PBES2-HS256+A128KW")
     end
   end
 
@@ -140,11 +132,9 @@ defmodule Guardian.Token.JweTest do
     test "success" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
 
-      {:ok, token} =
-        create_token(secret, "PBES2-HS512+A256KW")
+      {:ok, token} = create_token(secret, "PBES2-HS512+A256KW")
 
-      {:ok, claims} =
-        decode_token(token, secret, "PBES2-HS512+A256KW")
+      {:ok, claims} = decode_token(token, secret, "PBES2-HS512+A256KW")
 
       assert claims["id"] == 1
     end
@@ -152,25 +142,24 @@ defmodule Guardian.Token.JweTest do
     test "decryption failure" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
 
-      {:ok, token} =
-        create_token(secret, "PBES2-HS512+A256KW")
+      {:ok, token} = create_token(secret, "PBES2-HS512+A256KW")
 
       bad_secret = JOSE.JWK.from_oct("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-      {:error, :invalid_token} =
-        decode_token(token, bad_secret, "PBES2-HS512+A256KW")
+      {:error, :invalid_token} = decode_token(token, bad_secret, "PBES2-HS512+A256KW")
     end
   end
 
   describe "exchange" do
     test "it refreshes the JWE exp" do
       secret = JOSE.JWK.from_oct(@pbes_secret)
+
       old_claims = %{
         "jti" => UUID.uuid4(),
         "aud" => "MyApp",
         "typ" => "access",
-        "exp" => Guardian.timestamp + 10_000,
-        "iat" => Guardian.timestamp,
+        "exp" => Guardian.timestamp() + 10_000,
+        "iat" => Guardian.timestamp(),
         "iss" => "MyApp",
         "sub" => "User:1",
         "something_else" => "foo"
@@ -181,7 +170,8 @@ defmodule Guardian.Token.JweTest do
           __MODULE__.Impl,
           old_claims,
           secret: secret,
-          allowed_algos: ["PBES2-HS512+A256KW"])
+          allowed_algos: ["PBES2-HS512+A256KW"]
+        )
 
       {:ok, {^token = old_t, ^old_claims = old_c}, {new_t, new_c}} =
         Jwe.exchange(
@@ -189,7 +179,9 @@ defmodule Guardian.Token.JweTest do
           token,
           "access",
           "refresh",
-          [secret: secret, allowed_algos: ["PBES2-HS512+A256KW"]])
+          secret: secret,
+          allowed_algos: ["PBES2-HS512+A256KW"]
+        )
 
       refute old_t == new_t
       assert new_c["sub"] == old_c["sub"]
@@ -206,7 +198,8 @@ defmodule Guardian.Token.JweTest do
       __MODULE__.Impl,
       %{id: 1},
       secret: secret,
-      allowed_algos: [algo])
+      allowed_algos: [algo]
+    )
   end
 
   defp decode_token(token, secret, algo) do
@@ -214,6 +207,7 @@ defmodule Guardian.Token.JweTest do
       __MODULE__.Impl,
       token,
       secret: secret,
-      allowed_algos: [algo])
+      allowed_algos: [algo]
+    )
   end
 end

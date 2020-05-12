@@ -14,11 +14,11 @@ defmodule Guardian.Token.Jwe.Mixfile do
       app: :guardian_jwe,
       version: @version,
       elixir: "~> 1.5",
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
       source_url: @url,
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       maintainers: @maintainers,
       description: "JWE plugin for Guardian authentication framework",
       homepage_url: @url,
@@ -48,7 +48,6 @@ defmodule Guardian.Token.Jwe.Mixfile do
   defp deps do
     [
       {:guardian, "~> 1.0"},
-
       {:credo, "~> 0.8.6", only: [:dev, :test]},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false}
     ]
