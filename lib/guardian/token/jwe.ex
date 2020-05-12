@@ -85,7 +85,7 @@ defmodule Guardian.Token.Jwe do
 
     {_, token} =
       jwk
-      |> JWE.block_encrypt(Poison.encode!(claims), jws)
+      |> JWE.block_encrypt(Jason.encode!(claims), jws)
       |> JWE.compact()
 
     {:ok, token}
@@ -138,7 +138,7 @@ defmodule Guardian.Token.Jwe do
       jwk
       |> JWE.block_decrypt(token)
       |> elem(0)
-      |> Poison.decode!()
+      |> Jason.decode!()
 
     {:ok, decrypted}
   rescue
