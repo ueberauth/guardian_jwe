@@ -1,16 +1,19 @@
-# Guardian.Token.Jwe
+# Guardian.Token.Jwe [![Hex.pm](https://img.shields.io/hexpm/v/guardian_jwe.svg)](https://hex.pm/packages/guardian_jwe)
 
 This package is a plugin for [Guardian](https://hex.pm/packages/guardian).
 
+## Documentation
+
+API documentation is available at [https://hexdocs.pm/guardian_jwe](https://hexdocs.pm/guardian_jwe)
+
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `guardian_jwe` to your list of dependencies in `mix.exs`:
+To install `Guardian.Token.Jwe`, first add it to your `mix.exs` file:
 
 ```elixir
 def deps do
   [
-    {:guardian_jwe, "~> 0.1.0"}
+    {:guardian_jwe, "~> 0.2.0"}
   ]
 end
 ```
