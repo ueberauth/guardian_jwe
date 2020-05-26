@@ -2,7 +2,7 @@ defmodule Guardian.Token.Jwe.Mixfile do
   @moduledoc false
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.2.0"
   @url "https://github.com/davepersing/guardian_jwe"
   @maintainers [
     "Dave Persing"
@@ -10,15 +10,15 @@ defmodule Guardian.Token.Jwe.Mixfile do
 
   def project do
     [
-      name: "Guardian",
+      name: "Guardian.Token.Jwe",
       app: :guardian_jwe,
       version: @version,
       elixir: "~> 1.5",
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
       source_url: @url,
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       maintainers: @maintainers,
       description: "JWE plugin for Guardian authentication framework",
       homepage_url: @url,
@@ -40,17 +40,20 @@ defmodule Guardian.Token.Jwe.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :guardian]
+      extra_applications: [:logger]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:guardian, "~> 1.0"},
-
-      {:credo, "~> 0.8.6", only: [:dev, :test]},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
+      {:guardian, "~> 2.0"},
+      # NOTE: plug is required because of the issue in guardian
+      # https://github.com/ueberauth/guardian/issues/644
+      {:plug, "~> 1.3.3 or ~> 1.4", optional: true},
+      {:uuid, "~> 1.1"},
+      {:credo, "~> 1.4", only: [:dev, :test]},
+      {:ex_doc, "~> 0.22", only: :dev, runtime: false}
     ]
   end
 
